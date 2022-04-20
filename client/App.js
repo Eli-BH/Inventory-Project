@@ -2,6 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, Button } from "react-native";
 import { useEffect, useState } from "react";
 import { BarCodeScanner } from "expo-barcode-scanner";
+import axios from "axios";
 
 export default function App() {
   const [hasPermission, setHasPermission] = useState(null);
@@ -14,9 +15,18 @@ export default function App() {
     })();
   }, []);
 
-  const handleBarCodeScanned = ({ type, data }) => {
+  const handleBarCodeScanned = async ({ type, code }) => {
     setScanned(true);
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+
+    try {
+      alert(`Bar code with type ${type} and data ${code} has been scanned!`);
+
+      const { data } = await axios.get("http://localhost:4500/sku", code);
+
+      console.log(data);
+    } catch (error) {
+      alert(error);
+    }
   };
 
   if (hasPermission === null) {
