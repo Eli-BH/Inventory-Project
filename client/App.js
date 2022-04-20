@@ -15,18 +15,20 @@ export default function App() {
     })();
   }, []);
 
-  const handleBarCodeScanned = async ({ type, code }) => {
+  const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
 
-    try {
-      alert(`Bar code with type ${type} and data ${code} has been scanned!`);
-
-      const { data } = await axios.get("http://localhost:4500/sku", code);
-
-      console.log(data);
-    } catch (error) {
-      alert(error);
-    }
+    axios
+      .post("https://avian-inventory-project.herokuapp.com/sku", {
+        sku: data,
+      })
+      .then((res) => {
+        console.log(res.data.items[0].title);
+        alert(`The title is: ${res.data.items[0].title}`);
+      })
+      .catch((err) => {
+        alert(err);
+      });
   };
 
   if (hasPermission === null) {

@@ -2,7 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const axios = require("axios");
-const port = 4500;
+const port = process.env.PORT || 4500;
 const app = express();
 
 //middleware
@@ -18,7 +18,7 @@ app.post("/sku", async (req, res) => {
   try {
     const { data } = await axios.post(
       "https://api.upcitemdb.com/prod/trial/lookup",
-      `{ "upc": ${sku} }`,
+      `{ "upc": "${sku}" }`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -27,7 +27,8 @@ app.post("/sku", async (req, res) => {
       }
     );
 
-    return res.send(data);
+    console.log(data);
+    res.json(data);
   } catch (error) {
     console.log(error.message);
     res.send(error);
@@ -37,13 +38,13 @@ app.post("/sku", async (req, res) => {
 app.listen(port, () => {
   console.log(`listening on port ${port}`);
 
-  mongoose
-    .connect("mongodb://localhost:27017/inventory", {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    })
-    .then(() => {
-      console.log("connected to mongodb");
-    })
-    .catch((err) => console.log(err));
+  // mongoose
+  //   .connect("mongodb://localhost:27017/inventory", {
+  //     useNewUrlParser: true,
+  //     useUnifiedTopology: true,
+  //   })
+  //   .then(() => {
+  //     console.log("connected to mongodb");
+  //   })
+  //   .catch((err) => console.log(err));
 });
