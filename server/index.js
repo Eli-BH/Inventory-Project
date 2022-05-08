@@ -5,6 +5,8 @@ const axios = require("axios");
 const port = process.env.PORT || 4500;
 const app = express();
 
+const authRouter = "./routes/authRoutes.js";
+
 //middleware
 app.use(express.json());
 
@@ -34,6 +36,9 @@ app.post("/sku", async (req, res) => {
     res.send(error);
   }
 });
+
+//routes
+app.use("/api/auth", authRouter);
 
 app.listen(port, () => {
   console.log(`listening on port ${port}`);
